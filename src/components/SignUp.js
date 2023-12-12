@@ -1,97 +1,100 @@
+// client-> src -> components -> signup.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import "./Login.css";
 
-const SignUp = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+function Signup({ setIsLogin, setLoginResult }) {
+  const [fname, setFname] = useState("");
+  const [lname, setLname] = useState("");
+  const [dob, setDob] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [dob, setDOB] = useState("");
-  const [gender, setGender] = useState("");
-  const [alertMessage, setAlertMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [phone, setPhone] = useState("");
 
-  const handleSignUp = () => {
-    setIsLoading(true);
-    axios.post('http://localhost:5000/register', {
-      firstName,
-      lastName,
-      email,
-      password,
-      dob,
-      gender
-    })
+  const handleSignup = () => {
+    axios.post('http://localhost:5000/register', { fname, lname, dob, email, password, phone })
       .then((response) => {
         const result = response.data;
-        setAlertMessage(result ? "Data saved successfully" : "Failed to save data");
         if (result) {
-          setFirstName("");
-          setLastName("");
+          alert("Data saved successfully");
+          setLoginResult("Signup successful");
+          setFname("");
+          setLname("");
+          setDob("");
           setEmail("");
           setPassword("");
-          setDOB("");
-          setGender("");
+          setPhone("");
         }
       })
       .catch((error) => {
-        console.error("POST request error:", error);
-        setAlertMessage(`Error: ${error.message}`);
-      })
-      .finally(() => {
-        setIsLoading(false);
+        console.error("Signup request error:", error);
+        alert(`${error}`);
       });
   }
 
   return (
-    <div className="container">
-      <div>
-        <h1>Sign Up</h1>
-        <form>
+    <div className="signup-container">
+      <h1>Sign Up</h1>
+      <form>
+        <div className="form-group">
+          <label>First Name:</label>
           <input
             type="text"
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="Enter your first name"
+            value={fname}
+            onChange={(e) => setFname(e.target.value)}
           />
+        </div>
+        <div className="form-group">
+          <label>Last Name:</label>
           <input
             type="text"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Enter your last name"
+            value={lname}
+            onChange={(e) => setLname(e.target.value)}
           />
+        </div>
+        <div className="form-group">
+          <label>Date of Birth:</label>
           <input
-            type="email"
-            placeholder="Email"
+            type="text"
+            placeholder="Enter your date of birth"
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>Email:</label>
+          <input
+            type="text"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+        </div>
+        <div className="form-group">
+          <label>Password:</label>
           <input
-            type="password"
-            placeholder="Password"
+            type="text"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <input
-            type="date"
-            placeholder="Date of Birth (DOB)"
-            value={dob}
-            onChange={(e) => setDOB(e.target.value)}
-          />
+        </div>
+        <div className="form-group">
+          <label>Phone Number:</label>
           <input
             type="text"
-            placeholder="Gender"
-            value={gender}
-            onChange={(e) => setGender(e.target.value)}
+            placeholder="Enter your phone number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
-          <button type="button" onClick={handleSignUp} disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Sign Up'}
-          </button>
-          <p>{alertMessage}</p>
-        </form>
-      </div>
+        </div>
+        <button type="button" onClick={handleSignup}>
+          Sign Up
+        </button>
+      </form>
     </div>
   );
 }
 
-export default SignUp;
+export default Signup;
